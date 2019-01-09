@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
 
+class TodoList extends Component {
+  render() {
+    return <ul>
+    { this.props.todos.map((todo, index) => <li>{todo}<button onClick={this.props.onTodoSelected(index)}>Done</button></li> )}
+    </ul>
+  }
+}
+
 class App extends Component {
   constructor() {
     super();
@@ -31,12 +39,10 @@ class App extends Component {
   }
   
   onTodoDone(id) {
-    return (ev) => {
       this.setState((prev) => {
         prev.todos.splice(id, 1);
         return prev;
       })
-    }
   }
 
   render() {
@@ -47,9 +53,7 @@ class App extends Component {
         <input type="text" onInput={this.handleNewTodo} value={this.state.newTodo} />
         </form>
 
-        <ul>
-          {this.state.todos.map((todo, index) => <li>{todo}<button onClick={this.onTodoDone(index)}>Done</button></li> )}
-        </ul>
+        <TodoList todos={this.state.todos} onTodoSelected={this.onTodoDone} />
       </div>
     );
   }
