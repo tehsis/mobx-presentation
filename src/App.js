@@ -9,6 +9,37 @@ class TodoList extends Component {
   }
 }
 
+class AddTodo extends Component {
+  constructor() {
+    super();
+    this.state = {
+      newTodo: ''
+    };
+  }
+
+  handleNewTodo(ev) {
+    const {value} = ev.currentTarget;
+    this.setState((prev) => {
+      prev.newTodo = value;
+      return prev;
+    })
+  }
+
+  todoReady(ev) {
+    ev.preventDefault();
+    this.props.onTodoReady(this.state.newTodo);
+    this.setState({
+      newTodo: ''
+    });
+  }
+
+  render() {
+    return <form onSubmit={this.todoReady}>
+      <input type="text" onInput={this.handleNewTodo} value={this.state.newTodo} />
+    </form>
+  }
+}
+
 class App extends Component {
   constructor() {
     super();
@@ -30,10 +61,9 @@ class App extends Component {
     })
   }
 
-  handleNewTodo(ev) {
-    const {value} = ev.currentTarget;
+  handleNewTodo(todo) {
     this.setState((prev) => {
-      prev.newTodo = value;
+      prev.newTodo = todo;
       return prev;
     })
   }
@@ -49,10 +79,7 @@ class App extends Component {
     return (
       <div>
         <h1>My Todo List</h1>
-        <form onSubmit={this.todoReady}>
-        <input type="text" onInput={this.handleNewTodo} value={this.state.newTodo} />
-        </form>
-
+        <AddTodo onTodoReady={this.handleNewTodo} />
         <TodoList todos={this.state.todos} onTodoSelected={this.onTodoDone} />
       </div>
     );
